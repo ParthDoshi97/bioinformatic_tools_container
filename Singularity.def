@@ -6,6 +6,9 @@ From: ubuntu:20.04
     export PATH="/opt/STAR-2.7.11b/bin/Linux_x86_64_static:/opt/hisat2:/opt/bowtie2:/opt/samtools-1.10:/usr/local/bin:/opt/FastQC:$PATH"
 
 %post
+    # Set non-interactive installation to avoid getting stuck at prompts
+    export DEBIAN_FRONTEND=noninteractive
+
     # Install system dependencies and tools
     apt-get update && apt-get install -y \
         wget \
@@ -88,15 +91,11 @@ From: ubuntu:20.04
     cd /opt/samtools-1.10 && \
     ./configure --prefix=/usr/local && \
     make && \
-    make install && \
-    rm /samtools-1.10.tar.bz2
+    make install 
 
     ## PICARD
     wget https://github.com/broadinstitute/picard/releases/download/2.23.9/picard.jar -O /opt/picard.jar && \
     ln -sf /opt/picard.jar /usr/local/bin/picard
-
-%files
-    /path/to/local/files /destination/in/container
 
 %runscript
     exec /bin/bash "$@"
